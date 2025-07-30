@@ -20,50 +20,8 @@ This project demonstrates how to use Redis as a cache for product data in Node.j
 ---
 
 
+
 ## 1. MySQL + Redis Caching
----
-
-## 2. MongoDB + Redis Caching
----
-
-## 3. Redis Only Caching (No Database)
-
-### Purpose
-Demonstrates basic Redis caching in Node.js by simulating a database fetch. Useful for understanding the core caching logic and the difference between cache miss and cache hit.
-
-### Prerequisites
-- **Node.js** (v16 or later recommended)
-- **Redis Server** (running)
-
-### Setup Instructions
-1. **Clone or copy the project files** to your working directory.
-2. **Initialize npm and install dependencies:**
-   ```powershell
-   npm init -y
-   npm install redis
-   ```
-3. **Start the Redis server** if it is not already running (e.g., `redis-server`).
-4. **Run the script:**
-   ```powershell
-   node redistest.js
-   ```
-
-### Expected Output
-You should see output similar to:
-
-```
-Connected to Redis...
-First request:
-Cache miss
-Fetching data from database...
-Data cached: { id: 1001, name: 'Product1001', price: 100 }
-Product: {"id":1001,"name":"Product1001","price":100}, Time: X seconds
-
-Second request:
-Cache hit: {"id":1001,"name":"Product1001","price":100}
-Product: {"id":1001,"name":"Product1001","price":100}, Time: Y seconds
-```
-Where the first request is a cache miss (simulated database fetch), and the second request is a cache hit (faster, from Redis).
 
 ### Prerequisites
 - **Node.js** (v16 or later recommended)
@@ -136,3 +94,44 @@ Where the first request is a cache miss (simulated database fetch), and the seco
 ### Troubleshooting
 - Make sure both MongoDB and Redis servers are running before executing the script.
 - If you get connection errors, check your server status and connection details.
+
+---
+
+## 3. Redis Only Caching (No Database)
+
+### Purpose
+Demonstrates basic Redis caching in Node.js by simulating a database fetch. Useful for understanding the core caching logic and the difference between cache miss and cache hit.
+
+### Prerequisites
+- **Node.js** (v16 or later recommended)
+- **Redis Server** (running)
+
+### Setup Instructions
+1. **Clone or copy the project files** to your working directory.
+2. **Initialize npm and install dependencies:**
+   ```powershell
+   npm init -y
+   npm install redis
+   ```
+3. **Start the Redis server** if it is not already running (e.g., `redis-server`).
+4. **Run the script:**
+   ```powershell
+   node redistest.js
+   ```
+
+### Expected Output
+You should see output similar to:
+
+```
+Connected to Redis...
+First request:
+Cache miss
+Fetching data from database...
+Data cached: { id: 1001, name: 'Product1001', price: 100 }
+Product: {"id":1001,"name":"Product1001","price":100}, Time: X seconds
+
+Second request:
+Cache hit: {"id":1001,"name":"Product1001","price":100}
+Product: {"id":1001,"name":"Product1001","price":100}, Time: Y seconds
+```
+Where the first request is a cache miss (simulated database fetch), and the second request is a cache hit (faster, from Redis).
