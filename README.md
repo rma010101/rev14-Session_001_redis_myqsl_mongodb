@@ -19,6 +19,13 @@ This project demonstrates how to use Redis as a cache for product data in Node.j
 ---
 ---
 
+
+## 1. MySQL + Redis Caching
+---
+
+## 2. MongoDB + Redis Caching
+---
+
 ## 3. Redis Only Caching (No Database)
 
 ### Purpose
@@ -57,10 +64,6 @@ Cache hit: {"id":1001,"name":"Product1001","price":100}
 Product: {"id":1001,"name":"Product1001","price":100}, Time: Y seconds
 ```
 Where the first request is a cache miss (simulated database fetch), and the second request is a cache hit (faster, from Redis).
-
----
-
-## 1. MySQL + Redis Caching
 
 ### Prerequisites
 - **Node.js** (v16 or later recommended)
