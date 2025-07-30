@@ -20,7 +20,7 @@ redisClient.on('error', (err) => {
 const mysqlPool = mysql.createPool({
     host: '127.0.0.1', // Your MySQL host (usually localhost)
     user: 'root',      // Your MySQL username
-    password: 'Khaliq123$$', // Your MySQL password
+    password: '********', // Your MySQL password
     database: 'ecommerce', // The database to connect to
     waitForConnections: true,
     connectionLimit: 10,
