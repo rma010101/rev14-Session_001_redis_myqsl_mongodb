@@ -43,10 +43,47 @@ This project demonstrates how to use Redis as a cache for product data in Node.j
    node mySQLredistest.js
    ```
 
+
 ### What the Script Does
 - Connects to MySQL and Redis.
 - Ensures a `products` table exists and inserts test data.
 - Demonstrates caching: fetches product data, caches it in Redis, updates data, and invalidates the cache.
+
+#### Example Code Snippets
+
+**Fetching and Caching Product Data:**
+```js
+async function getProductDetails(productId) {
+    const cacheKey = `product_${productId}`;
+    // Check Redis cache first
+    const cachedProduct = await redisClient.get(cacheKey);
+    if (cachedProduct) {
+        return JSON.parse(cachedProduct); // Cache hit
+    } else {
+        // Cache miss: fetch from MySQL
+        const [rows] = await mysqlPool.execute(
+            'SELECT product_id, name, price, stock FROM products WHERE product_id = ?',
+            [productId]
+        );
+        const product = rows[0];
+        if (product) {
+            await redisClient.set(cacheKey, JSON.stringify(product), { EX: 3600 });
+        }
+        return product;
+    }
+}
+```
+
+**Updating Product and Invalidating Cache:**
+```js
+async function updateProductDetails(productId, update) {
+    // Update MySQL
+    await productsCollection.updateOne({ product_id: productId }, { $set: update });
+    // Invalidate Redis cache
+    const cacheKey = `product_${productId}`;
+    await redisClient.del(cacheKey);
+}
+```
 
 ### Notes
 - You do **not** need MongoDB for this script.
@@ -81,10 +118,43 @@ This project demonstrates how to use Redis as a cache for product data in Node.j
    node redismongotest.js
    ```
 
+
 ### What the Script Does
 - Connects to MongoDB and Redis.
 - Ensures a `products` collection exists and inserts test data.
 - Demonstrates caching: fetches product data, caches it in Redis, updates data, and invalidates the cache.
+
+#### Example Code Snippets
+
+**Fetching and Caching Product Data:**
+```js
+async function getProductDetails(productId) {
+    const cacheKey = `product_${productId}`;
+    // Check Redis cache first
+    const cachedProduct = await redisClient.get(cacheKey);
+    if (cachedProduct) {
+        return JSON.parse(cachedProduct); // Cache hit
+    } else {
+        // Cache miss: fetch from MongoDB
+        const product = await productsCollection.findOne({ product_id: productId });
+        if (product) {
+            await redisClient.set(cacheKey, JSON.stringify(product), { EX: 3600 });
+        }
+        return product;
+    }
+}
+```
+
+**Updating Product and Invalidating Cache:**
+```js
+async function updateProductDetails(productId, update) {
+    // Update MongoDB
+    await productsCollection.updateOne({ product_id: productId }, { $set: update });
+    // Invalidate Redis cache
+    const cacheKey = `product_${productId}`;
+    await redisClient.del(cacheKey);
+}
+```
 
 ### Notes
 - You do **not** need MySQL for this script.
@@ -118,6 +188,32 @@ Demonstrates basic Redis caching in Node.js by simulating a database fetch. Usef
    ```powershell
    node redistest.js
    ```
+
+
+### What the Script Does
+- Connects to Redis.
+- Simulates fetching product data from a database.
+- Demonstrates caching: fetches product data, caches it in Redis, and shows the difference between a cache miss and a cache hit.
+
+#### Example Code Snippet
+
+**Fetching, Caching, and Cache Hit Logic:**
+```js
+async function getProductDetails(productId) {
+    const cacheKey = `product:${productId}`;
+    // Check Redis cache
+    const cachedData = await client.get(cacheKey);
+    if (cachedData) {
+        console.log('Cache hit:', cachedData);
+        return JSON.parse(cachedData);
+    }
+    // Cache miss: simulate database fetch
+    const product = { id: productId, name: 'Product' + productId, price: 100 };
+    await client.setEx(cacheKey, 3600, JSON.stringify(product));
+    console.log('Data cached:', product);
+    return product;
+}
+```
 
 ### Expected Output
 You should see output similar to:
